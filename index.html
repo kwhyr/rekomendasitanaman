@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="./css/output.css" rel="stylesheet" />
+    <title>Sistem Rekomendasi</title>
+  </head>
+  <body class="pb-24">
+    <section class="container py-12 flex items-center flex-wrap md:flex-nowrap">
+      <div class="">
+        <h1 class="text-4xl font-bold md:w-2/3">
+          Sistem Rekomendasi Tanaman 
+        </h1>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="bg-gray-200 py-4 px-8 rounded-lg">
+        <h1 class="text-lg font-bold">Data Sensor Tanaman Terkini</h1>
+        <p class="text-sm" id="date-last-data">loading...</p>
+        <div class="mt-4 grid grid-cols-1 lg:grid-cols-5" id="last-data"></div>
+      </div>
+    </section>
+
+    <section class="container mt-8">
+      <h1 class="text-lg font-bold mb-4">Fungsi Keanggotaan Variabel Suhu</h1>
+      <div class="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
+        <div class="w-full">
+          <canvas id="chart-temp" class=""></canvas>
+        </div>
+        <div class="w-full">
+          <label class="font-bold" for="input-temp">Suhu</label>
+          <input
+            type="number"
+            name="input-temp"
+            id="input-temp"
+            class="border"
+            value="26"
+          />
+          <button
+            class="bg-blue-500 text-white px-4 py-1 rounded"
+            id="hitung-temp"
+          >
+            Hitung
+          </button>
+          <table id="table-temp" class="mt-4">
+            <tr>
+              <td class="border font-bold p-2 text-nowrap">Rendah</td>
+              <td class="border font-bold p-2 text-nowrap">Sedang</td>
+              <td class="border font-bold p-2 text-nowrap">Tinggi</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mt-8">
+      <h1 class="text-lg font-bold mb-4">Fungsi Keanggotaan Variabel pH</h1>
+      <div class="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
+        <div class="w-full">
+          <canvas id="chart-ph" class=""></canvas>
+        </div>
+        <div class="w-full">
+          <label class="font-bold" for="input-ph">pH</label>
+          <input
+            type="number"
+            name="input-ph"
+            id="input-ph"
+            class="border"
+            value="6.4"
+          />
+          <button
+            class="bg-blue-500 text-white px-4 py-1 rounded"
+            id="hitung-ph"
+          >
+            Hitung
+          </button>
+          <div class="overflow-y-auto">
+            <table id="table-ph" class="mt-4">
+              <tr>
+                <td class="border font-bold p-2 text-nowrap">Sangat Masam</td>
+                <td class="border font-bold p-2 text-nowrap">Masam</td>
+                <td class="border font-bold p-2 text-nowrap">Agak Masam</td>
+                <td class="border font-bold p-2 text-nowrap">Netral</td>
+                <td class="border font-bold p-2 text-nowrap">Agak Alkalis</td>
+                <td class="border font-bold p-2 text-nowrap">Alkalis</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mt-8">
+      <h1 class="text-lg font-bold mb-4">
+        Fungsi Keanggotaan Variabel Kelembapan Tanah
+      </h1>
+      <div class="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
+        <div class="w-full">
+          <canvas id="chart-soilmoist" class=""></canvas>
+        </div>
+        <div class="w-full">
+          <label class="font-bold" for="input-soilmoist">Kelembapan Tanah</label>
+          <input
+            type="number"
+            name="input-soilmoist"
+            id="input-soilmoist"
+            class="border"
+            value="480"
+          />
+          <button
+            class="bg-blue-500 text-white px-4 py-1 rounded"
+            id="hitung-soilmoist"
+          >
+            Hitung
+          </button>
+          <div class="overflow-y-auto">
+            <table id="table-soilmoist" class="mt-4">
+              <tr>
+                <td class="border font-bold p-2 text-nowrap">Kering</td>
+                <td class="border font-bold p-2 text-nowrap">Lembab</td>
+                <td class="border font-bold p-2 text-nowrap">Basah</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mt-8">
+      <h1 class="text-lg font-bold mb-4">
+        Fungsi Keanggotaan Variabel Altitude
+      </h1>
+      <div class="grid grid-cols-1 gap-4 md:gap-0 md:grid-cols-2">
+        <div class="w-full">
+          <canvas id="chart-altitude" class=""></canvas>
+        </div>
+        <div class="w-full">
+          <label class="font-bold" for="input-altitude">Altitude</label>
+          <input
+            type="number"
+            name="input-altitude"
+            id="input-altitude"
+            class="border"
+            value="396"
+          />
+          <button
+            class="bg-blue-500 text-white px-4 py-1 rounded"
+            id="hitung-altitude"
+          >
+            Hitung
+          </button>
+          <div class="overflow-y-auto">
+            <table id="table-altitude" class="mt-4">
+              <tr>
+                <td class="border font-bold p-2 text-nowrap">Rendah</td>
+                <td class="border font-bold p-2 text-nowrap">Sedang</td>
+                <td class="border font-bold p-2 text-nowrap">Tinggi</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container mt-8">
+      <div class="bg-gray-200 py-4 px-8 rounded-lg">
+        <h1 class="text-lg font-bold mb-4">
+          Hasil Inferensi Fuzzy Rekomendasi Tanaman
+        </h1>
+        <button class="bg-blue-500 text-white px-4 py-1 rounded" id="inferensi">
+          Hitung
+        </button>
+
+        <div id="inferensi-result" class="mt-4"></div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./js/script.js"></script>
+    <script src="./js/derajatKeanggotaan.js"></script>
+    <script src="./js/temp.js"></script>
+    <script src="./js/ph.js"></script>
+    <script src="./js/soilmoist.js"></script>
+    <script src="./js/altitude.js"></script>
+    <script src="./js/inferensiFuzzy.js"></script>
+  </body>
+</html>
