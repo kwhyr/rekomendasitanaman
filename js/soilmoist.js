@@ -44,41 +44,6 @@ const datasetBasahSoilmoist = labelsSoilmoist.map((label) => {
   }
 });
 
-// function render & calculate last data
-function renderSoilmoist(params) {
-  soilmoistDegrees = FuzzyLogic.soilmoistureMembership(parseFloat(params));
-  document.getElementById("table-soilmoist").innerHTML = `
-    <tr>
-      <td class="border font-bold p-2 text-nowrap">Kering</td>
-      <td class="border font-bold p-2 text-nowrap">Lembab</td>
-      <td class="border font-bold p-2 text-nowrap">Basah</td>
-    </tr>
-    <tr>
-      <td class="border p-2">${soilmoistDegrees.kering.toFixed(2)}</td>
-      <td class="border p-2">${soilmoistDegrees.lembab.toFixed(2)}</td>
-      <td class="border p-2">${soilmoistDegrees.basah.toFixed(2)}</td>
-    </tr>
-  `;
-}
-
-// function get from api https://api.thingspeak.com/channels/2824415/fields/3.json?api_key=TNPEQDCTJA6DJLKQ&results=1
-function getField3() {
-  return new Promise((resolve, reject) => {
-    fetch(
-      "https://api.thingspeak.com/channels/2824415/fields/3.json?api_key=TNPEQDCTJA6DJLKQ&results=1"
-    )
-      .then((response) => response.json())
-      .then((data) => resolve(data))
-      .catch((error) => reject(error));
-  });
-}
-
-(async () => {
-  const data = await getField3();
-  renderSoilmoist(data.feeds[0].field3);
-  document.getElementById("input-soilmoist").value = parseFloat(data.feeds[0].field3);
-})();
-
 const ctxSoilmoist = document.getElementById("chart-soilmoist");
 new Chart(ctxSoilmoist, {
   type: "line",
@@ -117,8 +82,56 @@ new Chart(ctxSoilmoist, {
   },
 });
 
-const hitungSoilmoist = document.getElementById("hitung-soilmoist");
-hitungSoilmoist.addEventListener("click", () => {
-  const inputSoilmoist = document.getElementById("input-soilmoist").value;
-  renderSoilmoist(inputSoilmoist);
-});
+// function render & calculate last data
+function renderSoilmoist(params) {
+  soilmoistDegrees = FuzzyLogic.soilmoistureMembership(parseFloat(params));
+  document.getElementById("table-soilmoist").innerHTML = `
+    <tr>
+      <td class="border font-bold p-2 text-nowrap">Kering</td>
+      <td class="border font-bold p-2 text-nowrap">Lembab</td>
+      <td class="border font-bold p-2 text-nowrap">Basah</td>
+    </tr>
+    <tr>
+      <td class="border p-2">${soilmoistDegrees.kering.toFixed(2)}</td>
+      <td class="border p-2">${soilmoistDegrees.lembab.toFixed(2)}</td>
+      <td class="border p-2">${soilmoistDegrees.basah.toFixed(2)}</td>
+    </tr>
+  `;
+}
+
+// function get from api https://api.thingspeak.com/channels/2824415/fields/3.json?api_key=TNPEQDCTJA6DJLKQ&results=1
+function getField3() {
+  return new Promise((resolve, reject) => {
+    fetch(
+      "https://api.thingspeak.com/channels/2824415/fields/3.json?api_key=TNPEQDCTJA6DJLKQ&results=1"
+    )
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
+  });
+}
+
+async function updateSoilmoistData() {
+  try {
+    const data = await getField3();
+    if (data.feeds.length > 0) {
+      const soilmoistValue = parseFloat(data.feeds[0].field3);
+      renderSoilmoist(soilmoistValue);
+      // document.getElementById("input-soilmoist").value = parseFloat(data.feeds[0].field3);
+    }
+  } catch (error) {
+    console.error("Error fetching soil moisture data:", error);
+  } 
+}
+
+// Initial fetch
+updateSoilmoistData();
+
+// Set interval to update pH data every 5 seconds
+setInterval(updateSoilmoistData, 5000);
+
+// const hitungSoilmoist = document.getElementById("hitung-soilmoist");
+// hitungSoilmoist.addEventListener("click", () => {
+//   const inputSoilmoist = document.getElementById("input-soilmoist").value;
+//   renderSoilmoist(inputSoilmoist);
+// });

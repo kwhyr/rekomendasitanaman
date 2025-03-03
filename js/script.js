@@ -12,26 +12,39 @@ function getLastData() {
   });
 }
 
-(async () => {
-  const lastData = await getLastData();
+async function updateLastData() {
+  try {
+    const lastData = await getLastData();
 
-  const lastDataContainer = document.getElementById("last-data");
-  const field = ["field1", "field2", "field3", "field4"];
-  let stringTags = "";
-  for (let i = 0; i < field.length; i++) {
-    stringTags += `
-      <div class="md:text-center border border-b-black last:border-0 py-2 md:border-b-0 md:last:border-l md:border-l-black md:first:border-none">
-        <p>${lastData["channel"]["field" + (i + 1)]}</p>
-        <p class="font-bold text-2xl">
-          ${lastData["feeds"][0]["field" + (i + 1)]}
-        </p>
-      </div>
-    `;
+    const lastDataContainer = document.getElementById("last-data");
+    const field = ["field1", "field2", "field3", "field4"];
+    let stringTags = "";
+
+    for (let i = 0; i < field.length; i++) {
+      stringTags += `
+        <div class="md:text-center border border-b-black last:border-0 py-2 md:border-b-0 md:last:border-l md:border-l-black md:first:border-none">
+          <p>${lastData["channel"]["field" + (i + 1)]}</p>
+          <p class="font-bold text-2xl">
+            ${parseFloat(lastData["feeds"][0]["field" + (i + 1)]).toFixed(1)}
+          </p>
+        </div>
+      `;
+    }
+
+    lastDataContainer.innerHTML = stringTags;
+
+    const dateLastData = document.getElementById("date-last-data");
+    dateLastData.innerHTML = new Date(
+      lastData["feeds"][0]["created_at"]
+    ).toLocaleString();
+  } catch (error) {
+    console.error("Error fetching data:", error);
   }
-  lastDataContainer.innerHTML = stringTags;
+}
 
-  const dateLastData = document.getElementById("date-last-data");
-  dateLastData.innerHTML = new Date(
-    lastData["feeds"][0]["created_at"]
-  ).toLocaleString();
-})();
+// Initial fetch
+updateLastData();
+
+// Set interval to update data every 5 seconds
+setInterval(updateLastData, 5000);
+

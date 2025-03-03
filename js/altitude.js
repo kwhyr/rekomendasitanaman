@@ -44,42 +44,6 @@ const datasetTinggiAltitude = labelsAltitude.map((label) => {
   }
 });
 
-// function render & calculate last data
-function renderAltitude(params) {
-  altitudeDegrees = FuzzyLogic.altitudeMembership(parseFloat(params));
-  document.getElementById("table-altitude").innerHTML = `
-    <tr>
-      <td class="border font-bold p-2 text-nowrap">Rendah</td>
-      <td class="border font-bold p-2 text-nowrap">Sedang</td>
-      <td class="border font-bold p-2 text-nowrap">Tinggi</td>
-    </tr>
-    <tr>
-      <td class="border p-2">${altitudeDegrees.rendah.toFixed(2)}</td>
-      <td class="border p-2">${altitudeDegrees.sedang.toFixed(2)}</td>
-      <td class="border p-2">${altitudeDegrees.tinggi.toFixed(2)}</td>
-    </tr>
-  `;
-}
-
-// function get from api https://api.thingspeak.com/channels/2824415/fields/4.json?api_key=TNPEQDCTJA6DJLKQ&results=1
-function getField4() {
-  return new Promise((resolve, reject) => {
-    fetch(
-      "https://api.thingspeak.com/channels/2824415/fields/4.json?api_key=TNPEQDCTJA6DJLKQ&results=1"
-    )
-      .then((response) => response.json())
-      .then((data) => resolve(data))
-      .catch((error) => reject(error));
-  });
-}
-
-(async () => {
-  const data = await getField4();
-  renderAltitude(data.feeds[0].field4);
-  document.getElementById("input-altitude").value =
-    parseFloat(data.feeds[0].field4);
-})();
-
 const ctxAltitude = document.getElementById("chart-altitude");
 new Chart(ctxAltitude, {
   type: "line",
@@ -118,8 +82,56 @@ new Chart(ctxAltitude, {
   },
 });
 
-const hitungAltitude = document.getElementById("hitung-altitude");
-hitungAltitude.addEventListener("click", () => {
-  const inputAltitude = document.getElementById("input-altitude").value;
-  renderAltitude(inputAltitude);
-});
+// function render & calculate last data
+function renderAltitude(params) {
+  altitudeDegrees = FuzzyLogic.altitudeMembership(parseFloat(params));
+  document.getElementById("table-altitude").innerHTML = `
+    <tr>
+      <td class="border font-bold p-2 text-nowrap">Rendah</td>
+      <td class="border font-bold p-2 text-nowrap">Sedang</td>
+      <td class="border font-bold p-2 text-nowrap">Tinggi</td>
+    </tr>
+    <tr>
+      <td class="border p-2">${altitudeDegrees.rendah.toFixed(2)}</td>
+      <td class="border p-2">${altitudeDegrees.sedang.toFixed(2)}</td>
+      <td class="border p-2">${altitudeDegrees.tinggi.toFixed(2)}</td>
+    </tr>
+  `;
+}
+
+// function get from api https://api.thingspeak.com/channels/2824415/fields/4.json?api_key=TNPEQDCTJA6DJLKQ&results=1
+function getField4() {
+  return new Promise((resolve, reject) => {
+    fetch(
+      "https://api.thingspeak.com/channels/2824415/fields/4.json?api_key=TNPEQDCTJA6DJLKQ&results=1"
+    )
+      .then((response) => response.json())
+      .then((data) => resolve(data))
+      .catch((error) => reject(error));
+  });
+}
+
+async function updateAltitudeData() {
+  try {
+    const data = await getField4();
+    if (data.feeds.length > 0) {
+      const altitudeValue = parseFloat(data.feeds[0].field4);
+      renderAltitude(altitudeValue);
+      // document.getElementById("input-altitude").value = parseFloat(data.feeds[0].field4);
+    }
+  } catch (error) {
+    console.error("Error fetching Altitude data:", error);
+  }
+}
+
+// Initial fetch
+updateAltitudeData();
+
+// Set interval to update altitude data every 5 seconds
+setInterval(updateAltitudeData, 5000);
+
+// const hitungAltitude = document.getElementById("hitung-altitude");
+// hitungAltitude.addEventListener("click", () => {
+//   const inputAltitude = document.getElementById("input-altitude").value;
+//   renderAltitude(inputAltitude);
+// });

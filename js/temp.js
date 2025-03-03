@@ -110,15 +110,27 @@ function getField1() {
   });
 }
 
-(async () => {
-  const field1 = await getField1();
-  const lastData = field1["feeds"][0]["field1"];
-  renderTemp(lastData);
-  document.getElementById('input-temp').value = parseFloat(lastData);
-})();
+async function updateTempData() {
+  try {
+    const data = await getField1();
+    if (data.feeds.length > 0) {
+      const tempValue = parseFloat(data.feeds[0].field1);
+      renderTemp(tempValue);
+      // document.getElementById('input-temp').value = parseFloat(lastData);
+    }
+  } catch (error) {
+    console.error("Error fetching Temperature data:", error);
+  }
+}
 
-const hitungTemp = document.getElementById("hitung-temp");
-hitungTemp.addEventListener("click", () => {
-  const inputTemp = document.getElementById("input-temp").value;
-  renderTemp(inputTemp);
-});
+// Initial fetch
+updateTempData();
+
+// Set interval to update temp data every 5 seconds
+setInterval(updateTempData, 5000);
+
+// const hitungTemp = document.getElementById("hitung-temp");
+// hitungTemp.addEventListener("click", () => {
+//   const inputTemp = document.getElementById("input-temp").value;
+//   renderTemp(inputTemp);
+// });

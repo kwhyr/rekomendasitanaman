@@ -170,14 +170,29 @@ function getField2() {
   });
 }
 
-(async () => {
-  const data = await getField2();
-  renderPh(data.feeds[0].field2);
-  document.getElementById("input-ph").value = parseFloat(data.feeds[0].field2);
-})();
+// Function to update pH data in real-time
+async function updatePhData() {
+  try {
+    const data = await getField2();
+    if (data.feeds.length > 0) {
+      const phValue = parseFloat(data.feeds[0].field2);
+      renderPh(phValue);
+      // document.getElementById("input-ph").value = phValue;
+    }
+  } catch (error) {
+    console.error("Error fetching pH data:", error);
+  }
+}
 
-const hitungPh = document.getElementById("hitung-ph");
-hitungPh.addEventListener("click", () => {
-  const inputPh = document.getElementById("input-ph").value;
-  renderPh(inputPh);
-});
+// Initial fetch
+updatePhData();
+
+// Set interval to update pH data every 5 seconds
+setInterval(updatePhData, 5000);
+
+// Event listener for manual calculation
+// const hitungPh = document.getElementById("hitung-ph");
+// hitungPh.addEventListener("click", () => {
+//   const inputPh = document.getElementById("input-ph").value;
+//   renderPh(inputPh);
+// });
